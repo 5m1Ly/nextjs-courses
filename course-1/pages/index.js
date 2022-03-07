@@ -1,7 +1,7 @@
 // http://localhost:3000/
 
-function homePage() {
+function pageContent() {
 	return <h1>The Home page</h1>
 }
 
-export default homePage;
+export default pageContent;
