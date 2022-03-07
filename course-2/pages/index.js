@@ -1,39 +1,32 @@
+import { MongoClient } from 'mongodb';
 import MeetupList from '../components/meetups/MeetupList';
 
-const DUMMY_MEETUPS = [
-	{
-		id: 'M00001',
-		title: 'Somewhere in the world 1',
-		image: 'https://www.dutchcowboys.nl/uploads/headers/sex-and-the-city.jpg',
-		addres: 'adress 10, 123123 pizza town',
-		discription: 'This is the first meetup'
-	},
-	{
-		id: 'M00002',
-		title: 'Somewhere in the world 2',
-		image: 'https://www.dutchcowboys.nl/uploads/headers/sex-and-the-city.jpg',
-		addres: 'adress 10, 123123 pizza town',
-		discription: 'This is the first meetup'
-	},
-	{
-		id: 'M00003',
-		title: 'Somewhere in the world 3',
-		image: 'https://www.dutchcowboys.nl/uploads/headers/sex-and-the-city.jpg',
-		addres: 'adress 10, 123123 pizza town',
-		discription: 'This is the first meetup'
-	},
-	{
-		id: 'M00004',
-		title: 'Somewhere in the world 4',
-		image: 'https://www.dutchcowboys.nl/uploads/headers/sex-and-the-city.jpg',
-		addres: 'adress 10, 123123 pizza town',
-		discription: 'This is the first meetup'
-	}
-];
+let pageContent = props => {
+	return <MeetupList meetups = { props.locations } />
+}
 
-function pageContent() {
+export async function getStaticProps() {
 
-	return <MeetupList meetups = { DUMMY_MEETUPS } />
+	const conn = await MongoClient.connect('mongodb+srv://<user>:<pass>@cluster0.wd7lz.mongodb.net/meetups?retryWrites=true&w=majority')
+	const db = conn.db();
+
+	const meetupsCollection = db.collection('meetups');
+	const locations = await meetupsCollection.find().toArray();
+
+	conn.close();
+
+	return {
+		props: {
+			title: 'Pizza Place',
+			locations: locations.map(location => ({
+				title: location.title,
+				address: location.address,
+				image: location.image,
+				id: location._id.toString()
+			}))
+		},
+		revalidate: 10
+	};
 
 }
 

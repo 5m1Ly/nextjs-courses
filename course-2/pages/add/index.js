@@ -1,15 +1,32 @@
+import { useRouter } from 'next/router';
 import NewMeetupForm from '../../components/meetups/NewMeetupForm';
 
 function pageContent() {
 
-	let locationDetails = locationData => {
+	const router = useRouter();
 
-		console.log(locationData);
+	async function locationHandler(location) {
 
-	}
+		const response = await fetch('../api/add', {
+			method: 'POST',
+			body: JSON.stringify(location),
+			headers: { 'Content-Type': 'application/json' }
+		});
 
-	return <NewMeetupForm onAddMeetup = { locationDetails } />
+		const data = await response.json();
+		console.log(data);
 
+		router.push('/');
+
+	};
+
+	return <NewMeetupForm onAddMeetup = { locationHandler } />
+
+}
+
+
+export async function getStaticProps() {
+	return { props: { title: 'Add A Pizza Place' } };
 }
 
 // https://localhost:3000/add

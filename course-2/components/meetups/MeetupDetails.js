@@ -7,7 +7,7 @@ let locationDetails = props => {
 		<img src = { props.image } alt = { props.title } />
 		<h2>{ props.title }</h2>
 		<address>{ props.address }</address>
-		<p>{ props.discription }</p>
+		<p>{ props.description }</p>
 
 	</section>
 
